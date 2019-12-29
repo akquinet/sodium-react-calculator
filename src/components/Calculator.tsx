@@ -1,5 +1,6 @@
 import * as React from "react";
 import DigitButton from "./DigitButton";
+import Display from "./Display";
 
 interface Props {
 }
@@ -12,6 +13,12 @@ export default class Calculator extends React.PureComponent<Props, State> {
     render() {
         return (
             <table>
+                <thead>
+                <tr>
+                    <th colSpan={3}><Display/></th>
+                </tr>
+                </thead>
+                <tbody>
                 <tr>
                     <td><DigitButton digit={7}/></td>
                     <td><DigitButton digit={8}/></td>
@@ -32,6 +39,7 @@ export default class Calculator extends React.PureComponent<Props, State> {
                     <td><DigitButton digit={0}/></td>
                     <td></td>
                 </tr>
+                </tbody>
             </table>
         )
     }
