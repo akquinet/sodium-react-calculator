@@ -10,7 +10,7 @@ interface Props {
     select(person$: C.Person$): void;
 }
 
-export class PersonItemView extends React.PureComponent<Props> {
+    export class PersonItemView extends React.PureComponent<Props> {
     private select = (e: React.SyntheticEvent<HTMLElement>) => this.props.select(this.props.person$);
 
     public render() {
