@@ -1,5 +1,4 @@
 import * as React from "react";
-import DigitButton from "./DigitButton";
 
 interface Props {
 }

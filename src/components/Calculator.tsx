@@ -10,6 +10,21 @@ interface State {
 
 // PureComponente => effizientere Variante für Update-Prüfung (shouldComponentUpdate()) sollte über Sodium erledigt werden
 export default class Calculator extends React.PureComponent<Props, State> {
+
+    private readonly Digit1 = React.createRef<DigitButton>()
+
+    //private
+
+    constructor(props:Props) {
+        super(props)
+        console.log('constructor on calculator ')
+    }
+
+    componentDidMount(): void {
+        console.log('componentDidMount() Calculator')
+
+    }
+
     render() {
         return (
             <table>
@@ -32,7 +47,7 @@ export default class Calculator extends React.PureComponent<Props, State> {
                 <tr>
                     <td><DigitButton digit={3}/></td>
                     <td><DigitButton digit={2}/></td>
-                    <td><DigitButton digit={1}/></td>
+                    <td><DigitButton digit={1} ref={this.Digit1}/></td>
                 </tr>
                 <tr>
                     <td></td>
