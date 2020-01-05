@@ -26,7 +26,7 @@ export default class Calculator extends React.PureComponent<Props> {
     private readonly opMinus = React.createRef<OperationButton>();
     private readonly opCompute = React.createRef<OperationButton>();
 
-    constructor(props:Props) {
+    constructor(props: Props) {
         super(props);
         console.log('constructor on calculator ')
     }
@@ -43,9 +43,7 @@ export default class Calculator extends React.PureComponent<Props> {
                 updatedStateS.hold(
                     new CalculatorState(0, 0, 0, Operator.None)));
 
-            const displayC = statusC.map(status => status.display);
-
-            return displayC;
+            return statusC.map(status => status.display);
         });
 
     }
@@ -85,9 +83,9 @@ export default class Calculator extends React.PureComponent<Props> {
     }
 
     private wireOperators(statusC: S.Cell<CalculatorState>) {
-        const combinedOperatorsWithoutComputeStream = this.opMinus.current!.operatorStream.get()
-            .orElse(this.opPlus.current!.operatorStream.get())
-            .orElse(this.opCompute.current!.operatorStream.get());
+        const combinedOperatorsWithoutComputeStream =
+            this.opMinus.current!.operatorStream.get()
+                .orElse(this.opPlus.current!.operatorStream.get());
 
 
         return combinedOperatorsWithoutComputeStream.snapshot(statusC,
@@ -110,7 +108,7 @@ export default class Calculator extends React.PureComponent<Props> {
             <table>
                 <thead>
                 <tr>
-                    <th colSpan={3}><Display ref={this.display}/></th>
+                    <th colSpan={4}><Display ref={this.display}/></th>
                 </tr>
                 </thead>
                 <tbody>
