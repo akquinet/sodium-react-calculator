@@ -1,6 +1,6 @@
 import * as React from "react"
 import * as S from "sodiumjs"
-import {Operator} from "../logic/operator";
+import {Operator, operatorSymbol} from "../logic/operator";
 import {AbstractButton, ReadOnlyHolder} from "./utilities";
 
 interface Props {
@@ -27,7 +27,7 @@ export default class OperationButton extends AbstractButton<Props> {
     render() {
         return (
             <div>
-                <button onClick={this.clickButton}>{this.props.operator}</button>
+                <button onClick={this.clickButton}>{operatorSymbol(this.props.operator)}</button>
             </div>
         )
     }
