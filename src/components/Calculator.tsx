@@ -3,7 +3,7 @@ import DigitButton from "./DigitButton"
 import Display from "./Display"
 import * as S from "sodiumjs"
 import OperationButton from "./OperationButton";
-import {Operator} from "../logic/operator";
+import {CalculatorState, Operator} from "../logic/operator";
 
 interface Props {
 }
@@ -22,6 +22,9 @@ export default class Calculator extends React.PureComponent<Props> {
     private readonly digit9 = React.createRef<DigitButton>();
     private readonly digit0 = React.createRef<DigitButton>();
     private readonly display = React.createRef<Display>();
+    private readonly opPlus = React.createRef<OperationButton>();
+    private readonly opMinus = React.createRef<OperationButton>();
+    private readonly opCompute = React.createRef<OperationButton>();
 
     constructor(props:Props) {
         super(props);
@@ -31,11 +34,42 @@ export default class Calculator extends React.PureComponent<Props> {
     componentDidMount(): void {
         console.log('componentDidMount() Calculator');
 
-        const combinedDigitsStream = this.combineDigitStreams();
+        this.display.current!.displayCell = S.Transaction.run(() => {
+            const statusC = new S.CellLoop<CalculatorState>();
 
-        this.display.current!.displayCell =
-            combinedDigitsStream.hold(0)
+            const updatedStateS = this.wireDigitAndOperatorStreams(statusC);
+
+            statusC.loop(
+                updatedStateS.hold(
+                    new CalculatorState(0, 0, 0, Operator.None)));
+
+            const displayC = statusC.map(status => status.display);
+
+            return displayC;
+        });
+
     }
+
+    private wireDigitAndOperatorStreams(statusC: S.Cell<CalculatorState>) {
+        const updatedEnteredNumberS = this.wireDigitStream(statusC);
+
+        const updatedStateFromCompute = this.wireComputeStream(statusC);
+
+        const updatedStateFromOperatorS = this.wireOperators(statusC);
+
+        return updatedEnteredNumberS
+            .orElse(updatedStateFromOperatorS)
+            .orElse(updatedStateFromCompute);
+    }
+
+    private wireDigitStream(statusC: S.Cell<CalculatorState>): S.Stream<CalculatorState> {
+        const digitS = this.combineDigitStreams();
+        return digitS.snapshot(
+            statusC,
+            (dig, status) =>
+                status.withDisplayAndMain(status.main * 10 + dig));
+    }
+
 
     private combineDigitStreams(): S.Stream<number> {
         return this.digit1.current!.digitStream.get()
@@ -50,6 +84,27 @@ export default class Calculator extends React.PureComponent<Props> {
             .orElse(this.digit0.current!.digitStream.get())
     }
 
+    private wireOperators(statusC: S.Cell<CalculatorState>) {
+        const combinedOperatorsWithoutComputeStream = this.opMinus.current!.operatorStream.get()
+            .orElse(this.opPlus.current!.operatorStream.get())
+            .orElse(this.opCompute.current!.operatorStream.get());
+
+
+        return combinedOperatorsWithoutComputeStream.snapshot(statusC,
+            (op, status) =>
+                status.applyActiveOperatorAndSetOperator(op));
+    }
+
+    private wireComputeStream(statusC: S.Cell<CalculatorState>): S.Stream<CalculatorState> {
+        return this.opCompute.current!.operatorStream.get()
+            .snapshot(statusC,
+                (u, status) =>
+                    status
+                        .applyActiveOperatorAndSetOperator(Operator.None)
+                        .resetMainAndback());
+    }
+
+
     render() {
         return (
             <table>
@@ -63,19 +118,19 @@ export default class Calculator extends React.PureComponent<Props> {
                     <td><DigitButton digit={7} ref={this.digit7}/></td>
                     <td><DigitButton digit={8} ref={this.digit8}/></td>
                     <td><DigitButton digit={9} ref={this.digit9}/></td>
-                    <td><OperationButton operator={Operator.Plus}/></td>
+                    <td><OperationButton operator={Operator.Plus} ref={this.opPlus}/></td>
                 </tr>
                 <tr>
                     <td><DigitButton digit={4} ref={this.digit4}/></td>
                     <td><DigitButton digit={5} ref={this.digit5}/></td>
                     <td><DigitButton digit={6} ref={this.digit6}/></td>
-                    <td><OperationButton operator={Operator.Minus}/></td>
+                    <td><OperationButton operator={Operator.Minus} ref={this.opMinus}/></td>
                 </tr>
                 <tr>
                     <td><DigitButton digit={1} ref={this.digit1}/></td>
                     <td><DigitButton digit={2} ref={this.digit2}/></td>
                     <td><DigitButton digit={3} ref={this.digit3}/></td>
-                    <td rowSpan={2}><OperationButton operator={Operator.Compute}/></td>
+                    <td rowSpan={2}><OperationButton operator={Operator.Compute} ref={this.opCompute}/></td>
                 </tr>
                 <tr>
                     <td/>

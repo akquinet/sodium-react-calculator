@@ -9,7 +9,7 @@ interface Props {
 
 export default class OperationButton extends AbstractButton<Props> {
 
-    private _operatorsStream = new ReadOnlyHolder<S.Stream<number>>();
+    operatorStream = new ReadOnlyHolder<S.Stream<Operator>>();
 
     constructor(props: Props) {
         super(props)
@@ -19,7 +19,7 @@ export default class OperationButton extends AbstractButton<Props> {
     componentDidMount(): void {
         console.log('componentDidMount() OperationButton' + this.props.operator)
 
-        this._operatorsStream.initialize(
+        this.operatorStream.initialize(
             this.clickStreamSink.map(() => this.props.operator)
         )
     }
