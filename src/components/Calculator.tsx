@@ -21,8 +21,6 @@ export default class Calculator extends React.PureComponent<Props> {
     private readonly digit0 = React.createRef<DigitButton>();
     private readonly display = React.createRef<Display>();
 
-    //private
-
     constructor(props:Props) {
         super(props);
         console.log('constructor on calculator ')
@@ -38,16 +36,16 @@ export default class Calculator extends React.PureComponent<Props> {
     }
 
     private combineDigitStreams(): S.Stream<number> {
-        return this.digit1.current!.digitStream
-            .orElse(this.digit2.current!.digitStream)
-            .orElse(this.digit3.current!.digitStream)
-            .orElse(this.digit4.current!.digitStream)
-            .orElse(this.digit5.current!.digitStream)
-            .orElse(this.digit6.current!.digitStream)
-            .orElse(this.digit7.current!.digitStream)
-            .orElse(this.digit8.current!.digitStream)
-            .orElse(this.digit9.current!.digitStream)
-            .orElse(this.digit0.current!.digitStream)
+        return this.digit1.current!.digitStream.get()
+            .orElse(this.digit2.current!.digitStream.get())
+            .orElse(this.digit3.current!.digitStream.get())
+            .orElse(this.digit4.current!.digitStream.get())
+            .orElse(this.digit5.current!.digitStream.get())
+            .orElse(this.digit6.current!.digitStream.get())
+            .orElse(this.digit7.current!.digitStream.get())
+            .orElse(this.digit8.current!.digitStream.get())
+            .orElse(this.digit9.current!.digitStream.get())
+            .orElse(this.digit0.current!.digitStream.get())
     }
 
     render() {

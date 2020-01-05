@@ -1,6 +1,6 @@
 import * as React from "react"
 import * as S from "sodiumjs"
-import {AbstractButton} from "./AbstractButton";
+import {AbstractButton, ReadOnlyHolder} from "./utilities";
 
 interface Props {
     readonly digit: number
@@ -8,25 +8,17 @@ interface Props {
 
 export default class DigitButton extends AbstractButton<Props> {
 
-    // TODO - This should be a reuasble Holder-Object-Class
-    private _digitStream : S.Stream<number> | null = null
-    get digitStream() : S.Stream<number> {
-        if (this._digitStream) {
-            return this._digitStream
-        } else {
-            throw new Error("_digitStream is not initialized")
-        }
-    }
+    digitStream = new ReadOnlyHolder<S.Stream<number>>();
 
-    constructor(props:Props) {
-        super(props)
-        console.log('constructor on digit '+props.digit )
+    constructor(props: Props) {
+        super(props);
+        console.log(`constructor on digit ${props.digit}`);
     }
 
     componentDidMount(): void {
-        console.log('componentDidMount() DigitButton' + this.props.digit)
+        console.log(`componentDidMount() DigitButton${this.props.digit}`);
 
-        this._digitStream = this.clickStreamSink.map( () => this.props.digit )
+        this.digitStream.initialize(this.clickStreamSink.map(() => this.props.digit));
     }
 
     render() {
