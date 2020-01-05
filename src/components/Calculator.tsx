@@ -9,32 +9,32 @@ interface Props {
 // PureComponente => effizientere Variante für Update-Prüfung (shouldComponentUpdate()) sollte über Sodium erledigt werden
 export default class Calculator extends React.PureComponent<Props> {
 
-    private readonly digit1 = React.createRef<DigitButton>()
-    private readonly digit2 = React.createRef<DigitButton>()
-    private readonly digit3 = React.createRef<DigitButton>()
-    private readonly digit4 = React.createRef<DigitButton>()
-    private readonly digit5 = React.createRef<DigitButton>()
-    private readonly digit6 = React.createRef<DigitButton>()
-    private readonly digit7 = React.createRef<DigitButton>()
-    private readonly digit8 = React.createRef<DigitButton>()
-    private readonly digit9 = React.createRef<DigitButton>()
-    private readonly digit0 = React.createRef<DigitButton>()
-    private readonly display = React.createRef<Display>()
+    private readonly digit1 = React.createRef<DigitButton>();
+    private readonly digit2 = React.createRef<DigitButton>();
+    private readonly digit3 = React.createRef<DigitButton>();
+    private readonly digit4 = React.createRef<DigitButton>();
+    private readonly digit5 = React.createRef<DigitButton>();
+    private readonly digit6 = React.createRef<DigitButton>();
+    private readonly digit7 = React.createRef<DigitButton>();
+    private readonly digit8 = React.createRef<DigitButton>();
+    private readonly digit9 = React.createRef<DigitButton>();
+    private readonly digit0 = React.createRef<DigitButton>();
+    private readonly display = React.createRef<Display>();
 
     //private
 
     constructor(props:Props) {
-        super(props)
+        super(props);
         console.log('constructor on calculator ')
     }
 
     componentDidMount(): void {
-        console.log('componentDidMount() Calculator')
+        console.log('componentDidMount() Calculator');
 
-        const combinedDigitsStream = this.combineDigitStreams()
+        const combinedDigitsStream = this.combineDigitStreams();
 
-        const displayCell = combinedDigitsStream.hold(0);
-        this.display.current!.displayCell = displayCell
+        this.display.current!.displayCell =
+            combinedDigitsStream.hold(0)
     }
 
     private combineDigitStreams(): S.Stream<number> {

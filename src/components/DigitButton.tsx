@@ -1,16 +1,12 @@
 import * as React from "react"
 import * as S from "sodiumjs"
+import {AbstractButton} from "./AbstractButton";
 
 interface Props {
     readonly digit: number
 }
 
-export default class DigitButton extends React.PureComponent<Props> {
-
-
-    private clickDigit = () => this.clickStreamSink.send(S.Unit)
-
-    private clickStreamSink = new S.StreamSink<S.Unit>()
+export default class DigitButton extends AbstractButton<Props> {
 
     // TODO - This should be a reuasble Holder-Object-Class
     private _digitStream : S.Stream<number> | null = null
@@ -36,7 +32,7 @@ export default class DigitButton extends React.PureComponent<Props> {
     render() {
         return (
             <div>
-                <button onClick={this.clickDigit}>{this.props.digit}</button>
+                <button onClick={this.clickButton}>{this.props.digit}</button>
             </div>
         )
     }

@@ -14,7 +14,7 @@ export default class Display extends React.PureComponent<Props, State> {
         super(props)
 
         this.state = {
-            displayedNumber: 4711
+            displayedNumber: 0
         }
 
     }
